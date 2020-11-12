@@ -3,6 +3,7 @@ from tkinter import *
 from PIL import ImageTk, Image
 import os
 import requests 
+import json
 
 root = tk.Tk()
 root.title('Crypto King!!!')
@@ -11,8 +12,11 @@ root.geometry('600x300')
 def convert_usd():
     usd_val = usd_text.get("1.0",END) 
     print(usd_val)
+    r = requests.get('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin%2CEthereum%2CTether&vs_currencies=usd')
+    a = json.loads(r.text)
 
-    curr = [['Bitcoin',14096],['Ethereum',400],['Tether',1.01]]
+    curr = [['Bitcoin',int(a["bitcoin"]["usd"])],['Ethereum',int(a["ethereum"]["usd"])],['Tether',int(round(a["tether"]["usd"]))], ]
+
     for c in curr:
         crypto = int(usd_val)/int(c[1])
         output.insert(END,'USD to ' + c[0] + ' : ' + str(crypto) + '\n')
